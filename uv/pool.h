@@ -54,7 +54,7 @@ namespace Libra
 
 			template<typename callback_t, typename ...A>
 			auto invoke_work(uv_work_t* req) throw()
-				-> std::enable_if_t < !std::is_void<std::result_of_t<callback_t(A...)>>::value, void* >
+				-> typename std::enable_if< !std::is_void<typename std::result_of<callback_t(A...)>::type>::value, void* >::type
 			{
 				typedef typename std::result_of<callback_t(A...)>::type type;
 				type* r = nullptr;
@@ -90,7 +90,7 @@ namespace Libra
 		
 			template<typename callback_t, typename ...A>
 			auto invoke_work(uv_work_t* req) throw()
-				->std::enable_if_t <std::is_void<std::result_of_t<callback_t(A...)>>::value>				
+				-> typename std::enable_if <std::is_void<typename std::result_of<callback_t(A...)>::type>::value, void>::type
 			{
 				auto params = get_data_params_from_req<callback_t, std::tuple<A...>>(req);
 				try
